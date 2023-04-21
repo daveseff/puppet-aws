@@ -258,6 +258,14 @@ Puppet::Type.newtype(:ec2_instance) do
     groups = self[:security_groups]
     groups.is_a?(Array) ? groups : [groups]
   end
+  
+  newproperty(:metadata_options) do
+    desc 'The metadata options for the instance.'
+    validate do |value|
+      fail 'httpEndpoint should be enabled' unless value.httpEndpoint? =~ 'enabled' 
+      fail 'httpTokens should force v2 only' unless value.httpTokens? =~ 'required' 
+    end
+  end
 
   autorequire(:ec2_vpc_subnet) do
     self[:subnet]
