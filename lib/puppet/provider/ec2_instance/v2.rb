@@ -56,7 +56,7 @@ Puppet::Type.type(:ec2_instance).provide(:v2, :parent => PuppetX::Puppetlabs::Aw
   end
 
   def self.instance_to_hash(region, instance, subnets)
-    ec2 = ec2_client(region)
+    ec2 = ec2_client(region, metadata_options: { http_endpoint: "enabled", http_tokens: "required", })
     name = extract_name_from_tag(instance)
     return {} unless name
     tags = {}
