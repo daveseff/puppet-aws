@@ -322,7 +322,11 @@ Found #{matching_groups.length}:
         },
         monitoring: {
           enabled: resource[:monitoring].to_s,
-        }
+        },
+        metadata_options: {
+          http_endpoint: "enabled",
+          http_tokens: "required",
+      }
       }
 
       config = config_with_key_details(config)
@@ -331,7 +335,7 @@ Found #{matching_groups.length}:
       config = config_with_ip(config)
 
       response = ec2.run_instances(config)
-
+     
       instance_ids = response.instances.map(&:instance_id)
 
       with_retries(:max_tries => 5) do
