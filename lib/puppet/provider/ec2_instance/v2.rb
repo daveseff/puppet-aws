@@ -56,7 +56,7 @@ Puppet::Type.type(:ec2_instance).provide(:v2, :parent => PuppetX::Puppetlabs::Aw
   end
 
   def self.instance_to_hash(region, instance, subnets)
-    ec2 = ec2_client(region, metadata_options: { http_endpoint: "enabled", http_tokens: "required", })
+    ec2 = ec2_client(region)
     name = extract_name_from_tag(instance)
     return {} unless name
     tags = {}
@@ -330,8 +330,13 @@ Found #{matching_groups.length}:
       config = config_with_network_details(config)
       config = config_with_ip(config)
 
+      metadata_options: {
+        http_endpoint: "enabled",
+        http_tokens: "required",
+      }
+      
       response = ec2.run_instances(config)
-
+     
       instance_ids = response.instances.map(&:instance_id)
 
       with_retries(:max_tries => 5) do
